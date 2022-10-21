@@ -19,7 +19,6 @@ export class WebSocketClient {
 
   openConnection(pair: string) {
     this.client.on('open', () => {
-      console.log('WS open');
       this.connecting = false;
       this.connected = true;
       this.orderBook = {
@@ -40,7 +39,6 @@ export class WebSocketClient {
 
   handlerClose() {
     this.client.on('close', () => {
-      console.log('WS close');
       this.connecting = false;
       this.connected = false;
     });
