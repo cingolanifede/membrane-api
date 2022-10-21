@@ -22,7 +22,9 @@ class MarketController {
 
   public execute = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+      const limit = req.query.limit || 0;
       const data: MarketDto = req.body;
+
       const newOrder = new MarketDto();
       newOrder.amount = data.amount;
       newOrder.pair = data.pair;
@@ -31,7 +33,7 @@ class MarketController {
       const errors = await validate(newOrder);
       if (errors.length > 0) throw new HttpException(400, JSON.stringify(errors));
 
-      const result = await this.marketService.placeOrder(data);
+      const result = await this.marketService.placeOrder(data, Number(limit));
 
       res.status(200).json({ data: result, message: null });
     } catch (error) {

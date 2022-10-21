@@ -13,15 +13,29 @@ class MarketService {
     return [obj.bids[max], obj.asks[min]];
   }
 
-  public async placeOrder(data: MarketDto): Promise<any> {
+  public async placeOrder(data: MarketDto, limit?: number): Promise<any> {
     const obj = data.pair === PairEnum.tBTCUSD ? tBTCUSD.getBook() : tETHUSD.getBook();
 
-    return data.type === TypeEnum.buy ? this.process(obj, 'bids', data.amount) : this.process(obj, 'asks', data.amount);
+    return data.type === TypeEnum.buy ? this.process(obj, 'bids', data.amount, limit) : this.process(obj, 'asks', data.amount, limit);
   }
 
-  private process(obj: Book, side: string, amount: number) {
+  private process(obj: Book, side: string, amount: number, limit: number) {
+    // console.log('obj :>> ', obj);
     const data = Object.keys(obj[side]);
-    const reversedKeys = side === 'bids' ? data.reverse() : data;
+    let reversedKeys = side === 'bids' ? data.reverse() : data;
+    // filter object
+    if (limit > 0) {
+      // const filtered = reversedKeys
+      //   .filter(key => Number(key) > limit)
+      //   .reduce((o, key) => {
+      //     o[key] = obj[side][key];
+      //     return o;
+      //   }, {});
+
+      reversedKeys = reversedKeys.filter(k => {
+        return Number(k) < limit;
+      });
+    }
     let result = null;
     let delta = 0;
 
