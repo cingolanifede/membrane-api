@@ -3,7 +3,7 @@ import { HttpException } from '@/exceptions/HttpException';
 import MarketService from '@/services/market.service';
 import { validate } from 'class-validator';
 import { NextFunction, Request, Response } from 'express';
-
+import { tBTCUSD, tETHUSD } from '@/app';
 class MarketController {
   public marketService = new MarketService();
 

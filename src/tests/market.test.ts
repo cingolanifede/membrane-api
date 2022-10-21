@@ -1,13 +1,16 @@
 import { Request, Response } from 'express';
 import MarketController from '../controllers/market.controller';
 import MarketService from '../services/market.service';
-
-jest.mock('../services/market.service');
+import { tBTCUSD, tETHUSD } from '../app';
 
 //TODO: finish testings & fix mocking websockets impleentation
 afterAll(async () => {
   await new Promise<void>(resolve => setTimeout(() => resolve(), 500));
 });
+
+jest.mock('../services/market.service');
+
+const mockM: jest.Mocked<MarketService> = new MarketService() as any;
 
 describe('Testing OrderBook', () => {
   describe('[GET] /orderbook?change=tBTCUSD', () => {
@@ -30,7 +33,7 @@ describe('Testing OrderBook', () => {
         message: 'tBTCUSD',
       };
 
-      (MarketService.bidAsk as jest.MockedFunction<any>).mockResolvedValueOnce(mockBidAsk);
+      mockM.bidAsk.mockImplementation(() => mockBidAsk as any);
 
       const mNext = jest.fn();
       const mReq = {
@@ -42,8 +45,8 @@ describe('Testing OrderBook', () => {
       } as unknown as Response;
 
       const eController = new MarketController();
-      await eController.tips(mReq, mRes, mNext);
-      expect(MarketService.bidAsk).toHaveBeenCalledTimes(1);
+      const r = await eController.tips(mReq, mRes, mNext);
+      expect(mockM.bidAsk).toHaveBeenCalledTimes(1);
       expect(mRes.status).toBeCalledWith(200);
     });
     it('response should fail with 400 when no pair', async () => {
@@ -65,7 +68,7 @@ describe('Testing OrderBook', () => {
         message: 'tBTCUSD',
       };
 
-      (MarketService.bidAsk as jest.MockedFunction<any>).mockResolvedValueOnce(mockBidAsk);
+      mockM.bidAsk.mockImplementation(() => mockBidAsk as any);
 
       const mNext = jest.fn();
       const mReq = {
@@ -97,7 +100,7 @@ describe('Testing OrderBook', () => {
         message: null,
       };
 
-      (MarketService.placeOrder as jest.MockedFunction<any>).mockResolvedValueOnce(mockOrder);
+      mockM.placeOrder.mockImplementationOnce(() => mockOrder as any);
 
       const mNext = jest.fn();
       const mReq = {
@@ -110,7 +113,7 @@ describe('Testing OrderBook', () => {
 
       const eController = new MarketController();
       await eController.execute(mReq, mRes, mNext);
-      expect(MarketService.placeOrder).toHaveBeenCalledTimes(1);
+      expect(mockM.placeOrder).toHaveBeenCalledTimes(1);
       expect(mRes.status).toBeCalledWith(200);
     });
   });

@@ -3,8 +3,6 @@ import { MarketDto, PairEnum, TypeEnum } from '@/dtos/market.dto';
 import { Book } from '@/interfaces/book.interface';
 
 class MarketService {
-  static bidAsk: any;
-  static placeOrder: any;
   public async bidAsk(data: string) {
     const obj = data === 'tBTCUSD' ? tBTCUSD.getBook() : tETHUSD.getBook();
 
@@ -19,7 +17,7 @@ class MarketService {
     return data.type === TypeEnum.buy ? this.process(obj, 'bids', data.amount, limit) : this.process(obj, 'asks', data.amount, limit);
   }
 
-  process(obj: Book, side: string, amount: number, limit: number) {
+  public process(obj: Book, side: string, amount: number, limit: number) {
     // console.log('obj :>> ', obj);
     const data = Object.keys(obj[side]);
     let reversedKeys = side === 'bids' ? data.reverse() : data;
