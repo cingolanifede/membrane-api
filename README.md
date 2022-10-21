@@ -10,3 +10,5 @@ To run the api
 3- npm run dev (will run api in port 3000 by default)
 
 To access front views, go http://localhost:3000/index.html
+
+Swagger file in route /api-docs
