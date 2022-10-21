@@ -13,6 +13,4 @@ To access front views, in the browser go to http://localhost:3000
 
 Swagger file in route "/api-docs"
 
-
---- TODO ---
-- Unit testing
+- Unit testing (WIP)
